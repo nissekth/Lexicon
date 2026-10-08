@@ -7,6 +7,9 @@
 **Övning 2 - Flow Control**  
 -Deadline 8/10, 10:00
 
+**Övning 3 - Exceptions**  
+-Deadline 9/10, 10:00
+
 
 
 ## Övrigt
