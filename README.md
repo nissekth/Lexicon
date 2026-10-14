@@ -10,7 +10,7 @@
 **Övning 3 - Exceptions**  
 -Deadline 9/10, 10:00
 
-**Övning 4 - Encapsulation**
+**Övning 4 - Encapsulation**  
 -Deadline 14/10, 10:00  
 Problem1 är bara sorteringsdelen (Solution1)  
 Problem2 är inklusive salaryincrease och validation (Solution 2 & 3)  
