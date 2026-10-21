@@ -8,7 +8,7 @@ namespace Övning5_Garage1._0.Models;
 public class Garage(string name, int capacity)
 {
     public string Name {get; private set;} = name;
-    private int garageCapacity = capacity;
+    public int MaxCapacity {get; private set;} = capacity;
     private decimal availableSlots = capacity;
     public decimal AvailableSlots => availableSlots;
     private Vehicle?[] parkedVehicles = new Vehicle[capacity];
@@ -67,10 +67,14 @@ public class Garage(string name, int capacity)
 
     public Vehicle[] GetAllVehiclesInformation()
     {
+        if (!parkedVehicles.Any())
+        {
+            throw new Exception("Garage is empty!");
+        }
 
-        Vehicle[] allVehicles = new Vehicle[garageCapacity];
+        Vehicle[] allVehicles = new Vehicle[MaxCapacity];
         int i = 0;
-        foreach(Vehicle v in parkedVehicles)
+        foreach(Vehicle v in parkedVehicles!)
         {
             if(v != null){
                 allVehicles[i++] = v;
@@ -91,8 +95,13 @@ public class Garage(string name, int capacity)
 
     public int[] GetGarageStats()
     {
+        if (!parkedVehicles.Any())
+        {
+            throw new Exception("Garage is empty!");
+        }
+
         int[] stats = new int[Enum.GetNames<VehicleType>().Length];
-        foreach(Vehicle v in parkedVehicles)
+        foreach(Vehicle v in parkedVehicles!)
         {
             if(v != null){
                 stats[(int)v.VehicleType]++;
@@ -100,5 +109,45 @@ public class Garage(string name, int capacity)
         }
         return stats;
     }
+
+
+    public Vehicle[] GetGarageSelection(VehicleType? vehicleType, VehicleColour? colour, FuelType? fuelType, int? noOfWheels, decimal? length)
+    {
+        if (!parkedVehicles.Any())
+        {
+            throw new Exception("Garage is empty!");
+        }
+        
+        Vehicle[] selection = new Vehicle[parkedVehicles.Length];
+        int count = 0;
+
+        //Det här var ju inte så snyggt... Byt ut mot && eller || istället kanske
+        foreach (Vehicle? vehicle in parkedVehicles)
+        {
+            if (vehicle != null)
+            {
+                if (vehicleType == null || vehicle.VehicleType == vehicleType)
+                {
+                    if (colour == null || vehicle.Colour == colour)
+                    {
+                        if (fuelType == null || vehicle.FuelType == fuelType)
+                        {
+                            if (noOfWheels == null || vehicle.NoOfWheels == noOfWheels)
+                            {
+                                if (length == null || vehicle.Length == length)
+                                {
+                                    selection[count++] = vehicle;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Array.Resize(ref selection, count);
+        return selection;
+    }
+
 
 }

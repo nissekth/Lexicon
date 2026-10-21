@@ -9,7 +9,7 @@ public class RetrieveVehicleMenu
 
     const string STAR_SEPARATOR = "***************************************";
     const string MENU_TITLE = "**********  RETRIEVAL MENU   **********";
-    const string LINE_SEPARATOR = "______________________________________";
+    const string LINE_SEPARATOR = "_________________________________________";
     public static void StartRetrievalMenu(Garage garage)
     {
         Console.WriteLine("\n"+STAR_SEPARATOR);
@@ -27,8 +27,12 @@ public class RetrieveVehicleMenu
         //Determine registreringsnummer
         while (true)
         {
-            Console.WriteLine(LINE_SEPARATOR); 
-            string userInput = UserInputRegistreringsnummer();
+            Console.WriteLine(LINE_SEPARATOR);
+            string? userInput = UserInputRegistreringsnummer();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                continue;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException();
@@ -64,7 +68,7 @@ public class RetrieveVehicleMenu
     }
 
 
-    private static string UserInputRegistreringsnummer()
+    private static string? UserInputRegistreringsnummer()
     {
         Console.WriteLine("Please enter the registreringsnummer of the vehicle.");
         Console.WriteLine("Press \'q\' to quit or \'b\' to go back.");

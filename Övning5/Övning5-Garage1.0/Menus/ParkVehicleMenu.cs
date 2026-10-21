@@ -10,20 +10,26 @@ public class ParkVehicleMenu
 
     const string STAR_SEPARATOR = "********************************";
     const string MENU_TITLE = "*******  PARKING  MENU   *******";
-    const string LINE_SEPARATOR = "______________________________________";
+    const string LINE_SEPARATOR = "_________________________________________";
+    const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
     public static void StartParkingMenu(Garage garage)
     {
-        Console.WriteLine("\n"+STAR_SEPARATOR);
+        Console.WriteLine("\n\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(STAR_SEPARATOR);
         Console.WriteLine("Current garage is: " + garage.Name);
         Console.WriteLine(LINE_SEPARATOR);
         Console.WriteLine("Please enter some information about your vehicle by entering a number below corresponding to your wish.");
-        Console.WriteLine("Press \'q\' to quit.\n");
+        Console.WriteLine(OPTION_QUIT);
 
         try
         {
-            Vehicle vehicle = CreateVehicle();
+            Vehicle? vehicle = CreateVehicle(garage);
+            if(vehicle == null)
+            {
+                Console.WriteLine("Vehicle not parked.");
+                return;
+            }
             ParkVehicle(garage, vehicle);
         }
         catch (UserTerminationException e)
@@ -37,7 +43,7 @@ public class ParkVehicleMenu
 
     }
 
-    private static Vehicle CreateVehicle()
+    private static Vehicle? CreateVehicle(Garage garage)
     {
 
         Vehicle vehicle;
@@ -51,10 +57,19 @@ public class ParkVehicleMenu
         //Determine vehicle type
         while (true)
         {    
-            string userInput = UserInputVehicleType();
+            string? userInput = UserInputVehicleType();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter a type!");
+                continue;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
+            }
+            if (UserBackNavigationSignal(userInput))
+            {
+                return null;
             }
 
             int userSelection = -1;
@@ -81,14 +96,28 @@ public class ParkVehicleMenu
         while (true)
         {
             Console.WriteLine(LINE_SEPARATOR); 
-            string userInput = UserInputRegistreringsnummer();
+            string? userInput = UserInputRegistreringsnummer();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter something!");
+                continue;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
             }
+            if (UserBackNavigationSignal(userInput))
+            {
+                return null;
+            }
 
             try{
                 registreringsnummer = FormatRegistreringsnummer(userInput);
+                if (garage.RegistreringsnummerAlreadyInGarage(registreringsnummer))
+                {
+                    Console.WriteLine($"Vehicle with registreringsnummer {registreringsnummer} is already in the garage!");
+                    return null;
+                }
                 break;
             }
             catch (Exception e)
@@ -102,10 +131,19 @@ public class ParkVehicleMenu
         while (true)
         {
             Console.WriteLine(LINE_SEPARATOR);   
-            string userInput = UserInputColour();
+            string? userInput = UserInputColour();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No colour selected.");
+                break;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
+            }
+            if (UserBackNavigationSignal(userInput))
+            {
+                return null;
             }
 
             int userSelection = -1;
@@ -117,7 +155,6 @@ public class ParkVehicleMenu
                 {
                     if(userSelection == 6)
                     {
-                        Console.WriteLine();
                         break;
                     }
                     Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
@@ -125,11 +162,13 @@ public class ParkVehicleMenu
                 else
                 {
                     vehicleColour = (VehicleColour)userSelection;
-                    Console.WriteLine();
                     break;
                 }
             }
-            Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+            }
         }
         
         Console.WriteLine(LINE_SEPARATOR);   
@@ -138,10 +177,19 @@ public class ParkVehicleMenu
         //Determine Fueltype
         while (true)
         {    
-            string userInput = UserInputFuelType();
+            string? userInput = UserInputFuelType();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No fueltype selected.");
+                break;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
+            }
+            if (UserBackNavigationSignal(userInput))
+            {
+                return null;
             }
 
             int userSelection = -1;
@@ -153,7 +201,6 @@ public class ParkVehicleMenu
                 {
                     if(userSelection == 6)
                     {
-                        Console.WriteLine();
                         break;
                     }
                     Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
@@ -161,21 +208,33 @@ public class ParkVehicleMenu
                 else
                 {
                     vehicleFuel = (FuelType)userSelection;
-                    Console.WriteLine();
                     break;
                 }
             }
-            Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+            }
         }
 
         //Determine length
         while (true)
         {
             Console.WriteLine(LINE_SEPARATOR); 
-            string userInput = UserInputLength();
+            string? userInput = UserInputLength();
+            Console.WriteLine(userInput);
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No vehicle length specified.");
+                break;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
+            }
+            if (UserBackNavigationSignal(userInput))
+            {
+                return null;
             }
             
             decimal length = 0;
@@ -190,11 +249,13 @@ public class ParkVehicleMenu
                 else
                 {
                     vehicleLength = length;
-                    Console.WriteLine();
                     break;
                 }
             }
-            Console.WriteLine($"Invalid option! Please provide an number!\n");
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an number!\n");
+            }
         }
         
         Console.WriteLine(LINE_SEPARATOR);   
@@ -216,13 +277,13 @@ public class ParkVehicleMenu
             case VehicleType.Motorcycle: 
                 vehicle = new Motorcycle(VehicleType.Motorcycle, registreringsnummer, vehicleColour, vehicleFuel, 2, vehicleLength);  
                 return vehicle;
-            default: throw new Exception("Error! No such type!");
+            default: throw new Exception("No such type!");
         }
 
 
     }
 
-    private static string UserInputVehicleType()
+    private static string? UserInputVehicleType()
     {                
         //Hårdkodat, bör bytas senare till något kopplat till antal alternative
         Console.WriteLine("Please select the type of vehicle you wish to park by entering a number below corresponding to your vehicle type.");
@@ -234,14 +295,14 @@ public class ParkVehicleMenu
         return Console.ReadLine();
     }
 
-    private static string UserInputRegistreringsnummer()
+    private static string? UserInputRegistreringsnummer()
     {
         Console.WriteLine("Please enter the registreringsnummer of the vehicle.");
         Console.Write("> ");
         return Console.ReadLine();
     }
 
-    private static string UserInputColour()
+    private static string? UserInputColour()
     {
         //Hårdkodat, bör bytas senare till något kopplat till antal alternative
         Console.WriteLine("Please select the colour of the vehicle (optional).");        
@@ -254,7 +315,7 @@ public class ParkVehicleMenu
         return Console.ReadLine();
     }
 
-    private static string UserInputFuelType()
+    private static string? UserInputFuelType()
     {
         //Hårdkodat, bör bytas senare till något kopplat till antal alternative
         Console.WriteLine("Please select the fueltype of the vehicle (optional).");    
@@ -267,7 +328,7 @@ public class ParkVehicleMenu
         return Console.ReadLine();
     }
 
-    private static string UserInputLength()
+    private static string? UserInputLength()
     {
         //Hårdkodat, bör bytas senare till något kopplat till antal alternative
         Console.WriteLine("Please enter the length of the vehicle in meters (optional)."); 
@@ -289,6 +350,14 @@ public class ParkVehicleMenu
 
     }
 
+    private static bool UserBackNavigationSignal(string str)
+    {
+        if(str == "b")
+        {
+            return true;
+        }
+        return false;
+    }
     private static bool UserQuitSignal(string str)
     {
         if(str == "q")

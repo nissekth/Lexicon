@@ -6,7 +6,7 @@ namespace Övning5_Garage1._0.Models;
 public abstract class Vehicle
 {
     public VehicleType VehicleType {get; private set;}
-    private string _registreringsnummer;
+    private string _registreringsnummer = "";
     public VehicleColour Colour {get; private set;}
     public int NoOfWheels {get; private set;}
     public decimal Length {get; private set;}

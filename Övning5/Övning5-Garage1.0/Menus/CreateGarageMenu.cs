@@ -1,5 +1,4 @@
-using System.Text.RegularExpressions;
-using Övning5_Garage1._0.Enums;
+
 using Övning5_Garage1._0.Exceptions;
 using Övning5_Garage1._0.Models;
 
@@ -8,19 +7,20 @@ namespace Övning5_Garage1._0.Menus;
 public class CreateGarageMenu
 {
 
-    const string STAR_SEPARATOR = "*********************************";
-    const string MENU_TITLE = "****** CREATE GARAGE MENU  ******";
-    const string LINE_SEPARATOR = "______________________________________";
+    const string STAR_SEPARATOR = "*************************************";
+    const string MENU_TITLE = "******** CREATE GARAGE MENU  ********";
+    const string LINE_SEPARATOR = "_________________________________________";
+    const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
     
 
     public static Garage CreateNewGarage()
     {
 
-        Console.WriteLine("\n"+STAR_SEPARATOR);
+        Console.WriteLine("\n\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(STAR_SEPARATOR);
         Console.WriteLine("Please enter some information about your new garage.");
-        Console.WriteLine("Press \'q\' to quit.");
+        Console.WriteLine(OPTION_QUIT);
 
         string garageName;
         int garageCapacity;
@@ -30,7 +30,12 @@ public class CreateGarageMenu
         while (true)
         {   
             Console.WriteLine(LINE_SEPARATOR); 
-            string userInput = UserInputGarageName();
+            string? userInput = UserInputGarageName();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter a name!");
+                continue;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
@@ -47,7 +52,6 @@ public class CreateGarageMenu
             else
             {
                 garageName = userInput;
-                Console.WriteLine();
                 break;
             }
         }
@@ -56,7 +60,12 @@ public class CreateGarageMenu
         while (true)
         {
             Console.WriteLine(LINE_SEPARATOR); 
-            string userInput = UserInputCapacity();
+            string? userInput = UserInputCapacity();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter a capacity!");
+                continue;
+            }
             if (UserQuitSignal(userInput))
             {
                 throw new UserTerminationException("User quit successfully.");
@@ -77,11 +86,13 @@ public class CreateGarageMenu
                 else
                 {
                     garageCapacity = capacity;
-                    Console.WriteLine();
                     break;
                 }
             }
-            Console.WriteLine($"Invalid option! Please provide an number!\n");
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an number!\n");
+            }
         }
         
         Console.WriteLine(LINE_SEPARATOR); 
@@ -92,7 +103,7 @@ public class CreateGarageMenu
     }
 
 
-    private static string UserInputGarageName()
+    private static string? UserInputGarageName()
     {
         Console.WriteLine("Please enter the name of the garage.");
         Console.Write("> ");
@@ -100,7 +111,7 @@ public class CreateGarageMenu
     }
 
 
-    private static string UserInputCapacity()
+    private static string? UserInputCapacity()
     {
         Console.WriteLine("Please enter the integer capacity of the garage."); 
         Console.Write("> ");

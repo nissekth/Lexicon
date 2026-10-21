@@ -9,10 +9,11 @@ public class MainMenu
     const string OPTION_3 = "3: List vehicles.";
     const string OPTION_4 = "4: Create garage.";
     const string OPTION_5 = "5: Switch garage.";
+    const string OPTION_6 = "6: Populate garage with random vehicles.";
     const string OPTION_QUIT = "Press \'q\' to quit.";
     public static void StartMainMenu()
     {
-        Console.WriteLine("\n"+SEPARATOR);
+        Console.WriteLine("\n\n"+SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(SEPARATOR);
         
@@ -22,10 +23,11 @@ public class MainMenu
         Console.WriteLine(OPTION_3);
         Console.WriteLine(OPTION_4);
         Console.WriteLine(OPTION_5);
+        Console.WriteLine(OPTION_6);
         Console.WriteLine(OPTION_QUIT);
     }
 
-    public static string GetUserSelection()
+    public static string? GetUserSelection()
     {
         Console.Write("> ");
         return Console.ReadLine();

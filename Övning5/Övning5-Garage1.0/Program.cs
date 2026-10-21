@@ -1,4 +1,4 @@
-﻿using Övning5_Garage1._0.Enums;
+﻿
 using Övning5_Garage1._0.Exceptions;
 using Övning5_Garage1._0.Models;
 using Övning5_Garage1._0.Menus;
@@ -9,10 +9,10 @@ public class Program
 {
     public static void Main()
     {
-        Garage[] garages = [new ("Default Garage",10)];
+        Garage[] garages = [new ("Default Garage",20)];
         int currentGarageIndex = 0;
 
-        Console.WriteLine("Welcome to ÖvningGarage 1.0!");
+        Console.WriteLine("\nWelcome to Övning 5.0!");
         while(true){
 
             try{
@@ -26,7 +26,6 @@ public class Program
 
         }
 
-
         Console.WriteLine("Shutting off. Goodbye!");
     }
 
@@ -36,12 +35,16 @@ public class Program
     public static void EnterWelcomeMenu(ref Garage[] garages, ref int currentGarageIndex)
     {
 
-
         int userSelection = 0;
         while (true)
         {    
             MainMenu.StartMainMenu();
-            string userInput = MainMenu.GetUserSelection();
+            string? userInput = MainMenu.GetUserSelection();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must select one of the options!");
+                continue;
+            }
             //Bad practice but can be fixed later, propagating a termination signal w/o exception
             if (UserQuitSignal(userInput))
             {
@@ -51,9 +54,9 @@ public class Program
             bool parseSuccess = int.TryParse(userInput,out userSelection);
             if (parseSuccess)
             {
-                if(userSelection < 1 || userSelection > 5)
+                if(userSelection < 1 || userSelection > 6)
                 {
-                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+                    Console.WriteLine($"Invalid option! The number must be between 1 and 6!\n");
                     userSelection = 0;
                 }
                 else
@@ -63,7 +66,7 @@ public class Program
             }
             else
             {
-                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 6!\n");
             }
         }
 
@@ -84,44 +87,30 @@ public class Program
             }
             else if(userSelection == 4)
             {
-                try
-                {
-                    Garage garage = CreateGarageMenu.CreateNewGarage();
-                    Array.Resize(ref garages, garages.Length + 1);
-                    garages[garages.Length - 1] = garage;
-                    currentGarageIndex = garages.Length - 1;
-                }
-                catch(UserTerminationException e)
-                {
-                    throw new UserTerminationException("User quit successfully.");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error! "+e.Message);
-                }
+                Garage garage = CreateGarageMenu.CreateNewGarage();
+                Array.Resize(ref garages, garages.Length + 1);
+                garages[garages.Length - 1] = garage;
+                currentGarageIndex = garages.Length - 1;
             }
             else if(userSelection == 5)
             {
-                try
-                {
-                    int? index = SwitchGarageMenu.SwitchCurrentGarage(garages);
-                    if(index != null){
-                        currentGarageIndex = (int)index;
-                    }
+                int? index = SwitchGarageMenu.SwitchCurrentGarage(garages);
+                if(index != null){
+                    currentGarageIndex = (int)index;
                 }
-                catch(UserTerminationException e)
-                {
-                    throw new UserTerminationException("User quit successfully.");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error! "+e.Message);
-                }
+            }            
+            else if(userSelection == 6)
+            {
+                PopulationMenu.PopulateGarage(garages[currentGarageIndex]);
             }
         }
         catch(UserTerminationException)
         {
             throw new UserTerminationException();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Error! " + e.Message);
         }
 
     }
