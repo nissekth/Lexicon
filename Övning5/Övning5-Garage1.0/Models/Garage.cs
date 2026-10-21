@@ -7,7 +7,7 @@ namespace Övning5_Garage1._0.Models;
 // Skulle kunna lägga till så att totalNoOfSlots kan vara en decimal, för motorcykelstorlekar och dyl
 public class Garage(string name, int capacity)
 {
-    private string garageName = name;
+    public string Name {get; private set;} = name;
     private int garageCapacity = capacity;
     private decimal availableSlots = capacity;
     public decimal AvailableSlots => availableSlots;

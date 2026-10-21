@@ -16,6 +16,8 @@ public class ParkVehicleMenu
         Console.WriteLine("\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(STAR_SEPARATOR);
+        Console.WriteLine("Current garage is: " + garage.Name);
+        Console.WriteLine(LINE_SEPARATOR);
         Console.WriteLine("Please enter some information about your vehicle by entering a number below corresponding to your wish.");
         Console.WriteLine("Press \'q\' to quit.\n");
 

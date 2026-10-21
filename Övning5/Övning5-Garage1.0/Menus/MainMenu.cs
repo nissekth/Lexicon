@@ -7,7 +7,8 @@ public class MainMenu
     const string OPTION_1 = "1: Park vehicle.";
     const string OPTION_2 = "2: Retrieve vehicle.";
     const string OPTION_3 = "3: List vehicles.";
-    const string OPTION_4 = "4: Manages garages.";
+    const string OPTION_4 = "4: Create garage.";
+    const string OPTION_5 = "5: Switch garage.";
     const string OPTION_QUIT = "Press \'q\' to quit.";
     public static void StartMainMenu()
     {
@@ -20,6 +21,7 @@ public class MainMenu
         Console.WriteLine(OPTION_2);
         Console.WriteLine(OPTION_3);
         Console.WriteLine(OPTION_4);
+        Console.WriteLine(OPTION_5);
         Console.WriteLine(OPTION_QUIT);
     }
 

@@ -1,0 +1,94 @@
+using System.Text.RegularExpressions;
+using Övning5_Garage1._0.Enums;
+using Övning5_Garage1._0.Exceptions;
+using Övning5_Garage1._0.Models;
+
+namespace Övning5_Garage1._0.Menus;
+
+public class SwitchGarageMenu
+{
+
+    const string STAR_SEPARATOR = "********************************";
+    const string MENU_TITLE = "****** SWITCH GARAGE MENU  ******";
+    const string LINE_SEPARATOR = "______________________________________";
+
+
+    public static int? SwitchCurrentGarage(Garage[] garages)
+    {
+        Console.WriteLine("\n"+STAR_SEPARATOR);
+        Console.WriteLine(MENU_TITLE);
+        Console.WriteLine(STAR_SEPARATOR);
+
+        Console.WriteLine("Please enter which garage you would like to set as current.");
+        Console.WriteLine("Press \'q\' to quit or \'b\' to go back.");
+
+        //Determine garage index
+        while (true)
+        {    
+            Console.WriteLine(LINE_SEPARATOR); 
+
+            string userInput = UserSelectGarage(garages);
+            if (UserQuitSignal(userInput))
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (UserBackNavigationSignal(userInput))
+            {
+                Console.WriteLine("No garage created!");
+                return null;
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            if (parseSuccess)
+            {
+                //Hårdkodat, bör bytas senare till något kopplat till antal alternative
+                if(userSelection < 1 || userSelection >= garages.Length)
+                {
+                    Console.WriteLine($"Invalid option! Please provide an integer corresponding to the options!\n");
+                }
+                else
+                {
+                    Console.WriteLine($"Selecting {garages[userSelection].Name} as current garage.");
+                    Console.WriteLine();
+                    return userSelection;
+                }
+            }
+            Console.WriteLine($"Invalid option! Please provide an integer corresponding to the options!\n");
+        }   
+
+
+    }
+
+    private static string UserSelectGarage(Garage[] garages)
+    {
+
+        Console.WriteLine("Please enter which garage you would like to set as current.");
+        for(int i = 0; i < garages.Length; i++)
+        {
+            Console.WriteLine($"{i}. {garages[i].Name} - Available slots: {garages[i].AvailableSlots}");
+        }
+
+        Console.Write("> ");
+        return Console.ReadLine();
+
+    }
+    private static bool UserBackNavigationSignal(string str)
+    {
+        if(str == "b")
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static bool UserQuitSignal(string str)
+    {
+        if(str == "q")
+        {
+            return true;
+        }
+        return false;
+    }
+
+}

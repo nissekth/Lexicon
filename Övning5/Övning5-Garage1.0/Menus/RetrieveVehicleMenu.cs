@@ -15,6 +15,8 @@ public class RetrieveVehicleMenu
         Console.WriteLine("\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(STAR_SEPARATOR);
+        Console.WriteLine("Current garage is: " + garage.Name);
+        Console.WriteLine(LINE_SEPARATOR);
 
         StartCheckout(garage);
     }

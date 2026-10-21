@@ -9,14 +9,14 @@ public class Program
 {
     public static void Main()
     {
-
-        Garage defaultGarage = new("firstGarage",10);
+        Garage[] garages = [new ("Default Garage",10)];
+        int currentGarageIndex = 0;
 
         Console.WriteLine("Welcome to ÖvningGarage 1.0!");
         while(true){
 
             try{
-                EnterWelcomeMenu(defaultGarage);
+                EnterWelcomeMenu(ref garages, ref currentGarageIndex);
             }
             catch(UserTerminationException e)
             {
@@ -33,8 +33,10 @@ public class Program
 
 
     //Remove parameter when implementing more garages
-    public static void EnterWelcomeMenu(Garage firstGarage)
+    public static void EnterWelcomeMenu(ref Garage[] garages, ref int currentGarageIndex)
     {
+
+
         int userSelection = 0;
         while (true)
         {    
@@ -49,9 +51,9 @@ public class Program
             bool parseSuccess = int.TryParse(userInput,out userSelection);
             if (parseSuccess)
             {
-                if(userSelection < 1 || userSelection > 4)
+                if(userSelection < 1 || userSelection > 5)
                 {
-                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and 4!\n");
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
                     userSelection = 0;
                 }
                 else
@@ -61,7 +63,7 @@ public class Program
             }
             else
             {
-                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 4!\n");
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and 5!\n");
             }
         }
 
@@ -69,20 +71,52 @@ public class Program
         {
             if(userSelection == 1)
             {
-                ParkVehicleMenu.StartParkingMenu(firstGarage);
+                ParkVehicleMenu.StartParkingMenu(garages[currentGarageIndex]);
             }
             else if (userSelection == 2)
             {
-                RetrieveVehicleMenu.StartRetrievalMenu(firstGarage);
+                RetrieveVehicleMenu.StartRetrievalMenu(garages[currentGarageIndex]);
             }
             else if (userSelection == 3)
             {
-                VehicleInformationMenu.StartInformationMenu(firstGarage);
+                VehicleInformationMenu.StartInformationMenu(garages[currentGarageIndex]);
                 
             }
             else if(userSelection == 4)
             {
-                
+                try
+                {
+                    Garage garage = CreateGarageMenu.CreateNewGarage();
+                    Array.Resize(ref garages, garages.Length + 1);
+                    garages[garages.Length - 1] = garage;
+                    currentGarageIndex = garages.Length - 1;
+                }
+                catch(UserTerminationException e)
+                {
+                    throw new UserTerminationException("User quit successfully.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error! "+e.Message);
+                }
+            }
+            else if(userSelection == 5)
+            {
+                try
+                {
+                    int? index = SwitchGarageMenu.SwitchCurrentGarage(garages);
+                    if(index != null){
+                        currentGarageIndex = (int)index;
+                    }
+                }
+                catch(UserTerminationException e)
+                {
+                    throw new UserTerminationException("User quit successfully.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error! "+e.Message);
+                }
             }
         }
         catch(UserTerminationException)

@@ -25,6 +25,8 @@ public class VehicleInformationMenu
             Console.WriteLine("\n"+STAR_SEPARATOR);
             Console.WriteLine(MENU_TITLE);
             Console.WriteLine(STAR_SEPARATOR);
+            Console.WriteLine("Current garage is: " + garage.Name);
+            Console.WriteLine(LINE_SEPARATOR);
 
             Console.WriteLine("Please select what you wish to do by entering a number below corresponding to your wish.");
             Console.WriteLine(OPTION_1);
