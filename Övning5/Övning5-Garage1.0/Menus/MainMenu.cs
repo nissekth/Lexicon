@@ -1,0 +1,32 @@
+namespace Övning5_Garage1._0.Menus;
+
+public class MainMenu
+{
+    const string SEPARATOR = "**************************************";
+    const string MENU_TITLE = "***********   MAIN  MENU   ***********";
+    const string OPTION_1 = "1: Park vehicle.";
+    const string OPTION_2 = "2: Retrieve vehicle.";
+    const string OPTION_3 = "3: List vehicles.";
+    const string OPTION_4 = "4: Manages garages.";
+    const string OPTION_QUIT = "Press \'q\' to quit.";
+    public static void StartMainMenu()
+    {
+        Console.WriteLine("\n"+SEPARATOR);
+        Console.WriteLine(MENU_TITLE);
+        Console.WriteLine(SEPARATOR);
+        
+        Console.WriteLine("Please select what you wish to do by entering a number below corresponding to your wish.");
+        Console.WriteLine(OPTION_1);
+        Console.WriteLine(OPTION_2);
+        Console.WriteLine(OPTION_3);
+        Console.WriteLine(OPTION_4);
+        Console.WriteLine(OPTION_QUIT);
+    }
+
+    public static string GetUserSelection()
+    {
+        Console.Write("> ");
+        return Console.ReadLine();
+    }
+
+}
