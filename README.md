@@ -15,6 +15,13 @@
 Problem1 är bara sorteringsdelen (Solution1)  
 Problem2 är inklusive salaryincrease och validation (Solution 2 & 3)  
   
+**Övning 5 - Garage1.0**  
+-Deadline 21/10, 10:00  
+Arrays  
+
+**Övning 6 - Garage 2.0**  
+-Deadline 26/10, 10:30  
+Lists and cleanup  
 
 ## Övrigt
 **ToK**  
