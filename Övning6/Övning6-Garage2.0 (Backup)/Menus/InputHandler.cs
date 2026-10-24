@@ -6,7 +6,7 @@ namespace Övning6_Garage2._0.Menus;
 
 public class InputHandler
 {
-    public static VehicleType? UserInputVehicleType()
+    public static VehicleType UserInputVehicleType()
     {
 
         //Determine vehicle type
@@ -18,13 +18,14 @@ public class InputHandler
                 Console.WriteLine($"You must enter a type!");
                 continue;
             }
-            if (UserQuitSignal(userInput))
+            //Probably bad practice, fix later
+            if (userInput == "q")
             {
                 throw new UserTerminationException("User quit successfully.");
             }
-            if (UserBackNavigationSignal(userInput))
+            if (userInput == "b")
             {
-                return null;
+                throw new UserBackNavigationException();
             }
 
             int userSelection = -1;
@@ -46,7 +47,7 @@ public class InputHandler
         
     }
 
-    public static string? UserInputRegistreringsnummer()
+    public static string UserInputRegistreringsnummer()
     {
         string registreringsnummer = "";
         //Determine registreringsnummer
@@ -58,27 +59,23 @@ public class InputHandler
                 Console.WriteLine($"You must enter something!");
                 continue;
             }
-            if (UserQuitSignal(userInput))
+            //Probably bad practice, fix later
+            if (userInput == "q")
             {
                 throw new UserTerminationException("User quit successfully.");
             }
-            if (UserBackNavigationSignal(userInput))
+            if (userInput == "b")
             {
-                return null;
+                throw new UserBackNavigationException();
             }
 
             try{
                 registreringsnummer = FormatRegistreringsnummer(userInput);
-                if (garage.RegistreringsnummerAlreadyInGarage(registreringsnummer))
-                {
-                    Console.WriteLine($"Vehicle with registreringsnummer {registreringsnummer} is already in the garage!");
-                    return null;
-                }
                 return registreringsnummer;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw new Exception(e.Message);
             }
             
         } 
@@ -95,13 +92,14 @@ public class InputHandler
                 Console.WriteLine($"No colour selected.");
                 return null;
             }
-            if (UserQuitSignal(userInput))
+            //Probably bad practice, fix later
+            if (userInput == "q")
             {
                 throw new UserTerminationException("User quit successfully.");
             }
-            if (UserBackNavigationSignal(userInput))
+            if (userInput == "b")
             {
-                return null;
+                throw new UserBackNavigationException();
             }
 
             int userSelection = -1;
@@ -129,7 +127,6 @@ public class InputHandler
         }
     }
          
-
     public static FuelType? UserInputFuelType()
     {
 
@@ -142,13 +139,14 @@ public class InputHandler
                 Console.WriteLine($"No fueltype selected.");
                 return null;
             }
-            if (UserQuitSignal(userInput))
+            //Probably bad practice, fix later
+            if (userInput == "q")
             {
                 throw new UserTerminationException("User quit successfully.");
             }
-            if (UserBackNavigationSignal(userInput))
+            if (userInput == "b")
             {
-                return null;
+                throw new UserBackNavigationException();
             }
 
             int userSelection = -1;
@@ -188,13 +186,14 @@ public class InputHandler
                 Console.WriteLine($"No vehicle length specified.");
                 return null;
             }
-            if (UserQuitSignal(userInput))
+            //Probably bad practice, fix later
+            if (userInput == "q")
             {
                 throw new UserTerminationException("User quit successfully.");
             }
-            if (UserBackNavigationSignal(userInput))
+            if (userInput == "b")
             {
-                return null;
+                throw new UserBackNavigationException();
             }
             
             decimal length = 0;
@@ -271,24 +270,6 @@ public class InputHandler
         return Console.ReadLine();
     }
 
-
-    private static bool UserBackNavigationSignal(string str)
-    {
-        if(str == "b")
-        {
-            return true;
-        }
-        return false;
-    }
-    private static bool UserQuitSignal(string str)
-    {
-        if(str == "q")
-        {
-            return true;
-        }
-        return false;
-    }
-
     private static string FormatRegistreringsnummer(string input){
 
         string reg = input ?? "error";
@@ -299,18 +280,37 @@ public class InputHandler
             throw new Exception("Registreringsnummer must consist of 6 characters.");
         }
 
+        if (!char.IsLetter(reg.ElementAt(1)) || !char.IsLetter(reg.ElementAt(2) || !char.IsLetter(reg.ElementAt(3))))
+        {
+            throw new Exception("Registreringsnummer must have letters at positions 1 2, and 3.");
+        }
+
         if (!char.IsDigit(reg.ElementAt(3)) || !char.IsDigit(reg.ElementAt(4)))
         {
             throw new Exception("Registreringsnummer must have integers at positions 3 and 4.");
         }
 
-        return reg.ToUpper();;
+        return reg.ToUpper();
     }
 
     public static string? GetUserSelection()
     {
         Console.Write("> ");
-        return Console.ReadLine();
+        string? input = Console.ReadLine();
+
+        if(input == null)
+        {
+            return null;
+        }
+        if (input == "q")
+        {
+            throw new UserTerminationException();
+        }
+        if (input == "b")
+        {
+            throw new UserBackNavigationException();
+        }
+        return input;
     }
 
 }
