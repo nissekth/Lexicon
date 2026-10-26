@@ -1,5 +1,6 @@
 
 using Övning6_Garage2._0.Enums;
+using Övning6_Garage2._0.Exceptions;
 
 namespace Övning6_Garage2._0.Models;
 
@@ -33,15 +34,19 @@ public abstract class Vehicle
         {
             if(value.Length != 6)
             {
-                throw new Exception("Registreringsnummer must consist of 6 characters.");
+                throw new BadRegistreringsnummerException("Registreringsnummer must consist of 6 characters.");
             }
             if (!char.IsLetter(value.ElementAt(0)) || !char.IsLetter(value.ElementAt(1)) || !char.IsLetter(value.ElementAt(2)))
             {
-                throw new Exception("Registreringsnummer must have letters at positions 1 2, and 3.");
+                throw new BadRegistreringsnummerException("Registreringsnummer must have letters at positions 1 2, and 3.");
             }
             if (!char.IsDigit(value.ElementAt(3)) || !char.IsDigit(value.ElementAt(4)))
             {
-                throw new Exception("Registreringsnummer must have integers at positions 4 and 5.");
+                throw new BadRegistreringsnummerException("Registreringsnummer must have integers at positions 4 and 5.");
+            }
+            if (!char.IsLetterOrDigit(value.ElementAt(5)))
+            {
+                throw new BadRegistreringsnummerException("Registreringsnummer must have letter or digit at positions 6.");
             }
 
             _registreringsnummer = value.ToUpper();

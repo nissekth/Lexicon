@@ -29,6 +29,7 @@ public class RetrieveVehicleMenu
             Console.WriteLine(LINE_SEPARATOR);
             string? userInput = VehicleService.UserInputRegistreringsnummer();
             Vehicle vehicle = garage.RetrieveVehicle(userInput);
+            Console.WriteLine(LINE_SEPARATOR);
             Console.WriteLine($"Success! The following vehicle was retrieved:");
             Console.WriteLine(vehicle.ListVehicleAttributes());
             return;
