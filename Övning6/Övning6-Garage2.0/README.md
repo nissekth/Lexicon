@@ -32,7 +32,7 @@ Består bara av några custom typer
 Består bara av några custom exceptions  
 
 ## Önskar feedback på...   
-Allt ni känner för egentligen. Men då finns det ju en jäkla massor att kommentera på, så vill ni ha vägledning kanske något nedan?  
+Allt ni känner för egentligen. Men då finns det ju en jäkla massor att kommentera på, så vill ni ha vägledning kanske något nedan? Ge bara så mycket feedback som känns rimligt, ni behöver inte ta alla frågor för min del.  
 ### Arkitektur och ansvar  
 -Vad tycker ni om separation of concerns i projektet? Är det tydligt vilket område varje klass ansvarar för? Och hur mycket bryts det?  
 -Jag har försökt ha så lite logik som möjligt i "meny-klasserna" och så lite output/UI som möjligt i modellerna. Jag har inte helt lyckats med det dock, är det några riktigt stora bovar där ni reagerar på?  
@@ -48,6 +48,4 @@ Allt ni känner för egentligen. Men då finns det ju en jäkla massor att komme
 
 ### Felhantering och robusthet  
 -Jag har löst så att användaren kan navigera bakåt till den tidigare menyn eller avbryta input och starta om i samma meny. Det är ordnat genom att kasta ett exception för att notifiera den kallande metoden om att dess call avbröts regelrätt. Det känns lite tokigt att använda ett exception så, vad tycker ni? Hur har ni gjort med det och/eller med när användaren avslutar programmet?  
--Säg förstås till om ni hittar några buggar.
-
-
+-Säg förstås till om ni hittar några större buggar.
