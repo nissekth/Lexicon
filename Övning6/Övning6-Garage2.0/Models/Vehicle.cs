@@ -35,18 +35,22 @@ public abstract class Vehicle
             {
                 throw new Exception("Registreringsnummer must consist of 6 characters.");
             }
+            if (!char.IsLetter(value.ElementAt(0)) || !char.IsLetter(value.ElementAt(1)) || !char.IsLetter(value.ElementAt(2)))
+            {
+                throw new Exception("Registreringsnummer must have letters at positions 1 2, and 3.");
+            }
             if (!char.IsDigit(value.ElementAt(3)) || !char.IsDigit(value.ElementAt(4)))
             {
-                throw new Exception("Registreringsnummer must have integers at positions 3 and 4.");
+                throw new Exception("Registreringsnummer must have integers at positions 4 and 5.");
             }
 
-            _registreringsnummer = value;
+            _registreringsnummer = value.ToUpper();
         }
     }
 
-    public string ListVehicleAttributes()
+    public virtual string ListVehicleAttributes()
     {
-        return $"Type: {VehicleType}\nReg: {Registreringsnummer}\nColour: {Colour}\nFuelType: {FuelType}\n#Wheels: {NoOfWheels}\nLength: {Length}\nSize: {Size}";
+        return $"Type: {VehicleType}\nReg: {Registreringsnummer}\nColour: {Colour}\nFuelType: {FuelType}\n#Wheels: {NoOfWheels}\nLength: {Length}m\nSize: {Size}";
     }
 
 }

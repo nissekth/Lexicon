@@ -1,7 +1,7 @@
-using System.Text.RegularExpressions;
 using Övning6_Garage2._0.Enums;
 using Övning6_Garage2._0.Exceptions;
 using Övning6_Garage2._0.Models;
+using Övning6_Garage2._0.Services;
 
 namespace Övning6_Garage2._0.Menus;
 
@@ -45,295 +45,68 @@ public class ParkVehicleMenu
 
     private static Vehicle? CreateVehicle(Garage garage)
     {
+        try
+        {        
 
-        Vehicle vehicle;
-        string registreringsnummer = "";
-        VehicleType vehicleType = VehicleType.Undefined;
-        VehicleColour vehicleColour = VehicleColour.Undefined;
-        FuelType vehicleFuel = FuelType.Undefined;
-        decimal vehicleLength = 0;
-
-
-        //Determine vehicle type
-        while (true)
-        {    
-            string? userInput = UserInputVehicleType();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"You must enter a type!");
-                continue;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                return null;
-            }
-
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfVehicleTypes = Enum.GetValues<VehicleType>().Length-1;
-            if (parseSuccess)
-            {
-                if(userSelection < 1 || userSelection > noOfVehicleTypes)
-                {
-                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfVehicleTypes}!\n");
-                }
-                else
-                {
-                    vehicleType = (VehicleType)(userSelection-1);
-                    Console.WriteLine();
-                    break;
-                }
-            }
-            Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfVehicleTypes}!\n");
-        }   
-
-
-        //Determine registreringsnummer
-        while (true)
-        {
-            Console.WriteLine(LINE_SEPARATOR); 
-            string? userInput = UserInputRegistreringsnummer();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"You must enter something!");
-                continue;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                return null;
-            }
-
-            try{
-                registreringsnummer = FormatRegistreringsnummer(userInput);
-                if (garage.RegistreringsnummerAlreadyInGarage(registreringsnummer))
-                {
-                    Console.WriteLine($"Vehicle with registreringsnummer {registreringsnummer} is already in the garage!");
-                    return null;
-                }
-                break;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            
-        } 
-
-        //Determine colour
-        while (true)
-        {
             Console.WriteLine(LINE_SEPARATOR);   
-            string? userInput = UserInputColour();
-            if (string.IsNullOrWhiteSpace(userInput))
+            VehicleType vehicleType = VehicleService.UserInputVehicleType();
+
+            Console.WriteLine(LINE_SEPARATOR);   
+            string registreringsnummer = VehicleService.UserInputRegistreringsnummer();
+            if (garage.RegistreringsnummerAlreadyInGarage(registreringsnummer))
             {
-                Console.WriteLine($"No colour selected.");
-                break;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
+                Console.WriteLine($"Vehicle with registreringsnummer {registreringsnummer} is already in the garage!");
                 return null;
             }
 
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfColourTypes = Enum.GetValues<VehicleColour>().Length-1;
-            if (parseSuccess)
+            Console.WriteLine(LINE_SEPARATOR);   
+            VehicleColour vehicleColour = VehicleService.UserInputColour() ?? VehicleColour.Undefined;
+
+            Console.WriteLine(LINE_SEPARATOR);   
+            FuelType vehicleFuel = VehicleService.UserInputFuelType() ?? FuelType.Undefined;
+
+            Console.WriteLine(LINE_SEPARATOR);   
+            //Fix this to handle null everywhere, instead of defaulting to 0
+            decimal vehicleLength = VehicleService.UserInputLength() ?? 0;
+
+            //handle subclass specific properties
+            Console.WriteLine(LINE_SEPARATOR);
+            MotorcycleBodyType? motorcycleBodyType = null;
+            CarBodyType? carBodyType = null;
+            int? noOfSeats = null;
+            bool? hasTrailer = null;
+            int? noOfEngines = null;
+            switch (vehicleType)
             {
-                if(userSelection < 1 || userSelection > noOfColourTypes)
-                {
-                    if(userSelection == 6)
-                    {
-                        break;
-                    }
-                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfColourTypes}!\n");
-                }
-                else
-                {
-                    vehicleColour = (VehicleColour)userSelection;
+                case VehicleType.Motorcycle: 
+                    motorcycleBodyType = VehicleService.UserInputMotorcycleBodyType();
                     break;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfColourTypes}!\n");
-            }
-        }
-        
-        Console.WriteLine(LINE_SEPARATOR);   
-
-
-        //Determine Fueltype
-        while (true)
-        {    
-            string? userInput = UserInputFuelType();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"No fueltype selected.");
-                break;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                return null;
-            }
-
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfFuelTypes = Enum.GetValues<VehicleColour>().Length-1;
-            if (parseSuccess)
-            {
-                if(userSelection < 1 || userSelection > noOfFuelTypes)
-                {
-                    if(userSelection == 6)
-                    {
-                        break;
-                    }
-                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfFuelTypes}!\n");
-                }
-                else
-                {
-                    vehicleFuel = (FuelType)userSelection;
+                case VehicleType.Car: 
+                    carBodyType = VehicleService.UserInputCarBodyType();
                     break;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfFuelTypes}!\n");
-            }
-        }
-
-        //Determine length
-        while (true)
-        {
-            Console.WriteLine(LINE_SEPARATOR); 
-            string? userInput = UserInputLength();
-            Console.WriteLine(userInput);
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"No vehicle length specified.");
-                break;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                return null;
-            }
-            
-            decimal length = 0;
-            Boolean parseSuccess = decimal.TryParse(userInput,out length);
-            if (parseSuccess)
-            {
-                //Hårdkodat, bör bytas senare till något kopplat till antal alternative
-                if(length < 1 || length > 100)
-                {
-                    Console.WriteLine($"Invalid option! Please provide the length of your vehicle!\n");
-                }
-                else
-                {
-                    vehicleLength = length;
+                case VehicleType.Bus: 
+                    noOfSeats = VehicleService.UserInputNoOfSeats();
                     break;
-                }
+                case VehicleType.Boat: 
+                    hasTrailer = VehicleService.UserInputTrailerPresence();
+                    break;
+                case VehicleType.Airplane: 
+                    noOfEngines = VehicleService.UserInputNoOfEngines();
+                    break;
+                default: throw new Exception("Error! Vehicletype could not be determined.");
             }
-            else
-            {
-                Console.WriteLine($"Invalid option! Please provide an number!\n");
-            }
-        }
-        
-        Console.WriteLine(LINE_SEPARATOR);   
 
-        switch (vehicleType)
+
+            return VehicleCreator.CreateVehicle(vehicleType, registreringsnummer, vehicleColour, vehicleFuel, vehicleLength, motorcycleBodyType, carBodyType, noOfSeats, hasTrailer, noOfEngines);
+        }
+        catch (UserTerminationException)
         {
-            case VehicleType.Car: 
-                vehicle = new Car(VehicleType.Car, registreringsnummer, vehicleColour, vehicleFuel, 4, vehicleLength); 
-                return vehicle;
-            case VehicleType.Airplane: 
-                vehicle = new Airplane(VehicleType.Airplane, registreringsnummer, vehicleColour, vehicleFuel, 6, vehicleLength);  
-                return vehicle;
-            case VehicleType.Boat: 
-                vehicle = new Boat(VehicleType.Boat, registreringsnummer, vehicleColour, vehicleFuel, 0, vehicleLength);  
-                return vehicle;
-            case VehicleType.Bus: 
-                vehicle = new Bus(VehicleType.Bus, registreringsnummer, vehicleColour, vehicleFuel, 6, vehicleLength);  
-                return vehicle;
-            case VehicleType.Motorcycle: 
-                vehicle = new Motorcycle(VehicleType.Motorcycle, registreringsnummer, vehicleColour, vehicleFuel, 2, vehicleLength);  
-                return vehicle;
-            default: throw new Exception("No such type!");
+            throw;
         }
-
-
-    }
-
-    private static string? UserInputVehicleType()
-    {                
-        Console.WriteLine("Please select the type of vehicle you wish to park by entering a number below corresponding to your vehicle type.");
-        int noOfVehicleTypes = Enum.GetValues<VehicleType>().Length-1;
-        for (int i = 0; i < noOfVehicleTypes; i++)
+        catch (UserBackNavigationException)
         {
-            Console.WriteLine(i+1 + ": " + (VehicleType)(i));
+            throw;
         }
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-    private static string? UserInputRegistreringsnummer()
-    {
-        Console.WriteLine("Please enter the registreringsnummer of the vehicle.");
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-    private static string? UserInputColour()
-    {
-        Console.WriteLine("Please select the colour of the vehicle (optional).");  
-        int noOfVehicleColours = Enum.GetValues<VehicleColour>().Length-1;      
-        for (int i = 0; i < noOfVehicleColours; i++)
-        {
-            Console.WriteLine(i+1 + ": " + (VehicleColour)(i));
-        }
-        Console.WriteLine("6. Unspecified.");
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-    private static string? UserInputFuelType()
-    {
-        Console.WriteLine("Please select the fueltype of the vehicle (optional).");   
-        int noOfFuelTypes = Enum.GetValues<FuelType>().Length-1; 
-        for (int i = 0; i < noOfFuelTypes; i++)
-        {
-            Console.WriteLine(i+1 + ": " + (FuelType)(i));
-        }
-        Console.WriteLine("6. Unspecified.");
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-    private static string? UserInputLength()
-    {
-        //Hårdkodat, bör bytas senare till något kopplat till antal alternative
-        Console.WriteLine("Please enter the length of the vehicle in meters (optional)."); 
-        Console.Write("> ");
-        return Console.ReadLine();
     }
 
 
@@ -348,40 +121,5 @@ public class ParkVehicleMenu
             Console.WriteLine($"Could not park vehicle! {e.Message}");
         }
 
-    }
-
-    private static bool UserBackNavigationSignal(string str)
-    {
-        if(str == "b")
-        {
-            return true;
-        }
-        return false;
-    }
-    private static bool UserQuitSignal(string str)
-    {
-        if(str == "q")
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private static string FormatRegistreringsnummer(string input){
-
-        string reg = input ?? "error";
-        reg = Regex.Replace(reg, @"\s", "");
-                  
-        if(reg.Length != 6)
-        {
-            throw new Exception("Registreringsnummer must consist of 6 characters.");
-        }
-
-        if (!char.IsDigit(reg.ElementAt(3)) || !char.IsDigit(reg.ElementAt(4)))
-        {
-            throw new Exception("Registreringsnummer must have integers at positions 3 and 4.");
-        }
-
-        return reg.ToUpper();;
     }
 }

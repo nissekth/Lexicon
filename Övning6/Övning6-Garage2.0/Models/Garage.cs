@@ -94,7 +94,12 @@ public class Garage(string name, int capacity)
             throw new Exception("Garage is empty!");
         }
 
-        List<int> stats = new List<int>(Enum.GetValues<VehicleType>().Length);
+        int capacity = Enum.GetValues<VehicleType>().Length;
+        List<int> stats = new List<int>(capacity);
+        for (int i = 0; i < capacity; i++)
+        {
+            stats.Add(0);
+        }
         foreach(Vehicle v in parkedVehicles!)
         {
             stats[(int)v.VehicleType]++;

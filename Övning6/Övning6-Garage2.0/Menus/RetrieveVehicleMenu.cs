@@ -1,6 +1,6 @@
-using System.Text.RegularExpressions;
 using Övning6_Garage2._0.Exceptions;
 using Övning6_Garage2._0.Models;
+using Övning6_Garage2._0.Services;
 
 namespace Övning6_Garage2._0.Menus;
 
@@ -25,91 +25,31 @@ public class RetrieveVehicleMenu
     {
         
         //Determine registreringsnummer
-        while (true)
-        {
+        try{
             Console.WriteLine(LINE_SEPARATOR);
-            string? userInput = UserInputRegistreringsnummer();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                continue;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException();
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                return;
-            }
-
-            try{
-                if(!ValidRegistreringsnummer(userInput))
-                {
-                    Console.WriteLine($"{userInput} is not a valid registreringsnummer.");
-                }
-                else
-                {
-                    Vehicle vehicle = garage.RetrieveVehicle(userInput);
-                    Console.WriteLine($"Success! The following vehicle was retrieved:");
-                    Console.WriteLine(vehicle.ListVehicleAttributes());
-                    return;
-                }
-            }
-            catch (NoSuchVehicleException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            string? userInput = VehicleService.UserInputRegistreringsnummer();
+            Vehicle vehicle = garage.RetrieveVehicle(userInput);
+            Console.WriteLine($"Success! The following vehicle was retrieved:");
+            Console.WriteLine(vehicle.ListVehicleAttributes());
+            return;
             
         } 
-    }
-
-
-    private static string? UserInputRegistreringsnummer()
-    {
-        Console.WriteLine("Please enter the registreringsnummer of the vehicle.");
-        Console.WriteLine("Press \'q\' to quit or \'b\' to go back.");
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-    
-    private static bool ValidRegistreringsnummer(string input){
-
-        string reg = input ?? "error";
-        reg = Regex.Replace(reg, @"\s", "");
-                  
-        if(reg.Length != 6)
+        catch (UserTerminationException) 
         {
-            return false;
+            throw;
         }
-
-        if (!char.IsDigit(reg.ElementAt(3)) || !char.IsDigit(reg.ElementAt(4)))
+        catch (UserBackNavigationException) 
         {
-            return false;
+            return;
         }
-
-        return true;
-    }
-
-    private static bool UserBackNavigationSignal(string str)
-    {
-        if(str == "b")
+        catch (NoSuchVehicleException e)
         {
-            return true;
+            Console.WriteLine(e.Message);
         }
-        return false;
-    }
-
-    private static bool UserQuitSignal(string str)
-    {
-        if(str == "q")
+        catch (Exception e)
         {
-            return true;
+            Console.WriteLine(e.Message);
         }
-        return false;
     }
 
 }

@@ -1,6 +1,7 @@
 
 using Övning6_Garage2._0.Exceptions;
 using Övning6_Garage2._0.Models;
+using Övning6_Garage2._0.Services;
 
 namespace Övning6_Garage2._0.Menus;
 
@@ -22,118 +23,31 @@ public class CreateGarageMenu
         Console.WriteLine("Please enter some information about your new garage.");
         Console.WriteLine(OPTION_QUIT);
 
-        string garageName;
-        int garageCapacity;
 
-
-        //Determine garage name
-        while (true)
-        {   
-            Console.WriteLine(LINE_SEPARATOR); 
-            string? userInput = UserInputGarageName();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"You must enter a name!");
-                continue;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                throw new Exception("No garage created!");
-            }
-
-            if(userInput.Length < 3 || userInput.Length > 20)
-            {
-                Console.WriteLine($"Invalid name! Please provide between 3 and 20 characters!\n");
-            }
-            else
-            {
-                garageName = userInput;
-                break;
-            }
-        }
-
-        //Determine capacity
-        while (true)
+        try
         {
             Console.WriteLine(LINE_SEPARATOR); 
-            string? userInput = UserInputCapacity();
-            if (string.IsNullOrWhiteSpace(userInput))
-            {
-                Console.WriteLine($"You must enter a capacity!");
-                continue;
-            }
-            if (UserQuitSignal(userInput))
-            {
-                throw new UserTerminationException("User quit successfully.");
-            }
-            if (UserBackNavigationSignal(userInput))
-            {
-                throw new Exception("No garage created!");
-            }
-            
-            int capacity = 0;
-            Boolean parseSuccess = int.TryParse(userInput,out capacity);
-            if (parseSuccess)
-            {
-                if(capacity < 1 || capacity > 100)
-                {
-                    Console.WriteLine($"Invalid option! Please provide an integer capacity between 1 and 100!\n");
-                }
-                else
-                {
-                    garageCapacity = capacity;
-                    break;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Invalid option! Please provide an number!\n");
-            }
-        }
+            string garageName = GarageService.UserInputGarageName();
+
+
+            Console.WriteLine(LINE_SEPARATOR); 
+            int garageCapacity = GarageService.UserInputGarageCapacity();
         
-        Console.WriteLine(LINE_SEPARATOR); 
+            Console.WriteLine(LINE_SEPARATOR); 
+            Garage garage = new Garage(garageName,garageCapacity);
 
-        Garage garage = new Garage(garageName,garageCapacity);
-        Console.WriteLine($"Success! Garage {garageName} was created!");
-        return garage;
-    }
-
-
-    private static string? UserInputGarageName()
-    {
-        Console.WriteLine("Please enter the name of the garage.");
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-
-    private static string? UserInputCapacity()
-    {
-        Console.WriteLine("Please enter the integer capacity of the garage."); 
-        Console.Write("> ");
-        return Console.ReadLine();
-    }
-
-    private static bool UserBackNavigationSignal(string str)
-    {
-        if(str == "b")
-        {
-            return true;
+            Console.WriteLine($"Success! Garage {garageName} was created!");
+            return garage;
+            
         }
-        return false;
-    }
-
-    private static bool UserQuitSignal(string str)
-    {
-        if(str == "q")
+        catch (UserBackNavigationException) 
         {
-            return true;
+            throw new UserBackNavigationException("No garage created!");
         }
-        return false;
+        catch (UserTerminationException) 
+        {
+            throw;
+        }
     }
 
 }
