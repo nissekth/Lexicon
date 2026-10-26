@@ -23,6 +23,9 @@ Arrays
 -Deadline 26/10, 10:30  
 Lists and cleanup  
 
+**Övning 7 - LINQ**  
+-Deadline 27/10, 10:30   
+
 ## Övrigt
 **ToK**  
 DEPR: Innehåller kod från Test och Kartläggning
