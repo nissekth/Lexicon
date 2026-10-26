@@ -143,20 +143,20 @@ public class VehicleService
 
             int userSelection = -1;
             Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfColourTypes = Enum.GetValues<VehicleColour>().Length-1;
+            int noOfColourTypes = Enum.GetValues<VehicleColour>().Length;
             if (parseSuccess)
             {
                 if(userSelection < 1 || userSelection > noOfColourTypes)
                 {
-                    if(userSelection == 6)
+                    if(userSelection == noOfColourTypes)
                     {
-                return null;
+                        return null;
                     }
                     Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfColourTypes}!\n");
                 }
                 else
                 {
-                    return (VehicleColour)userSelection;
+                    return (VehicleColour)(userSelection-1);
                 }
             }
             else
@@ -203,12 +203,12 @@ public class VehicleService
 
             int userSelection = -1;
             Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfFuelTypes = Enum.GetValues<FuelType>().Length-1;
+            int noOfFuelTypes = Enum.GetValues<FuelType>().Length;
             if (parseSuccess)
             {
                 if(userSelection < 1 || userSelection > noOfFuelTypes)
                 {
-                    if(userSelection == 6)
+                    if(userSelection == noOfFuelTypes)
                     {
                         return null;
                     }
@@ -216,7 +216,7 @@ public class VehicleService
                 }
                 else
                 {
-                    return (FuelType)userSelection;
+                    return (FuelType)(userSelection-1);
                 }
             }
             else
@@ -322,12 +322,12 @@ public class VehicleService
 
             int userSelection = -1;
             Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfBodyTypes = Enum.GetValues<CarBodyType>().Length-1;
+            int noOfBodyTypes = Enum.GetValues<CarBodyType>().Length;
             if (parseSuccess)
             {
                 if(userSelection < 1 || userSelection > noOfBodyTypes)
                 {
-                    if(userSelection == 6)
+                    if(userSelection == noOfBodyTypes)
                     {
                         return null;
                     }
@@ -335,7 +335,7 @@ public class VehicleService
                 }
                 else
                 {
-                    return (CarBodyType)userSelection;
+                    return (CarBodyType)(userSelection-1);
                 }
             }
             else
@@ -353,7 +353,7 @@ public class VehicleService
         {
             Console.WriteLine(i+1 + ": " + (CarBodyType)(i));
         }
-        Console.WriteLine(noOfBodyTypes + ". Unspecified.");
+        Console.WriteLine(noOfBodyTypes+1 + ". Unspecified.");
         Console.Write("> ");
         return Console.ReadLine();
     }
@@ -383,12 +383,12 @@ public class VehicleService
 
             int userSelection = -1;
             Boolean parseSuccess = int.TryParse(userInput,out userSelection);
-            int noOfBodyTypes = Enum.GetValues<MotorcycleBodyType>().Length-1;
+            int noOfBodyTypes = Enum.GetValues<MotorcycleBodyType>().Length;
             if (parseSuccess)
             {
                 if(userSelection < 1 || userSelection > noOfBodyTypes)
                 {
-                    if(userSelection == 6)
+                    if(userSelection == noOfBodyTypes)
                     {
                         return null;
                     }
@@ -396,7 +396,7 @@ public class VehicleService
                 }
                 else
                 {
-                    return (MotorcycleBodyType)userSelection;
+                    return (MotorcycleBodyType)(userSelection-1);
                 }
             }
             else
@@ -414,7 +414,7 @@ public class VehicleService
         {
             Console.WriteLine(i+1 + ": " + (MotorcycleBodyType)(i));
         }
-        Console.WriteLine(noOfBodyTypes + ". Unspecified.");
+        Console.WriteLine(noOfBodyTypes+1 + ". Unspecified.");
         Console.Write("> ");
         return Console.ReadLine();
     }
