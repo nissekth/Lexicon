@@ -6,7 +6,7 @@
 -Tveksam practice med att kasta exceptions för navigation, åtminstone för bakåt-navigationen.  
 
 ### Fixes från Garage 1.0  
--Implementerade unika egenskaper för alla underklasser av fordon.
+-Implementerade unika egenskaper för alla underklasser av fordon.  
 -Tydliggjorde UX för processen att lista fordon enligt särskilda kombinationer av sökkriterier.  
 -Fixade validering av första tre tecknen och sista tecknet av registreringsnumret.  
 
