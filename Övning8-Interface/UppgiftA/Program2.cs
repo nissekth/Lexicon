@@ -1,13 +1,15 @@
 ﻿
 namespace Övning8_Interface.UppgiftA;
-public class Program2 {
+public class Program2 : IStart {
+    /*
     public void Go()
     {
         Console.WriteLine("Nu kör vi program 2");
     }
-    
-    public void Run()
+    */
+
+    public void Start()
     {
-        
+        Console.WriteLine("This is just start");
     }
 }

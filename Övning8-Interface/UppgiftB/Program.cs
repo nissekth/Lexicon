@@ -1,14 +1,14 @@
 
 namespace Övning8_Interface.UppgiftB;
-public class Program : IProgram1, IProgram2  {
+public class Program : IRun1, IRun2  {
     
-    void IProgram1.Run()
+    void IRun1.Run()
     {
         Console.WriteLine("Nu kör vi void Run()");
     }
 
 
-    int IProgram2.Run()
+    int IRun2.Run()
     {
         Console.WriteLine("Nu kör vi int Run()");
         return 7;

@@ -1,9 +1,9 @@
 
 namespace Övning8_Interface.UppgiftB;
-public interface IProgram2
+public interface IRun1
 {
     
-    int Run();
+    void Run();
     
 
 }

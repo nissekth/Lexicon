@@ -1,9 +1,8 @@
 
 namespace Övning8_Interface.UppgiftA;
-public interface IRun
+public interface IStart
 {
     
-    void Run();
-    
+    void Start();
 
 }
