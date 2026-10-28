@@ -12,10 +12,14 @@ public class MainP {
         //Aprog1.Run();
         //Aprog2.Go();
         Aprog1.Start();
+        Aprog2.Start();
         Aprog1.Extra();
 
-        UppgiftB.IRun1 Bprog1 = new UppgiftB.Program();
-        UppgiftB.IRun2 Bprog2 = new UppgiftB.Program();
+
+        UppgiftB.Program BProg = new UppgiftB.Program();
+
+        UppgiftB.IRun1 Bprog1 = BProg;
+        UppgiftB.IRun2 Bprog2 = BProg;
         Bprog1.Run();
         Bprog2.Run();
 

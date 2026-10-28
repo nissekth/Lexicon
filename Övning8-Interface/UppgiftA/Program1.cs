@@ -12,12 +12,12 @@ public class Program1 : IStart, IExtra {
 
     public void Start()
     {
-        Console.WriteLine("This is just start");
+        Console.WriteLine("This is just start  (Program1)");
     }
 
     public void Extra()
     {
-        Console.WriteLine("This is just extra");
+        Console.WriteLine("This is just extra (Program1)");
     }
 
 

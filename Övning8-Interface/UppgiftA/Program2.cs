@@ -10,6 +10,6 @@ public class Program2 : IStart {
 
     public void Start()
     {
-        Console.WriteLine("This is just start");
+        Console.WriteLine("This is just start (Program2)");
     }
 }
