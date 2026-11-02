@@ -1,0 +1,547 @@
+using System.Text.RegularExpressions;
+using Övning9_Garage3._0.Models;
+using Övning9_Garage3._0.Exceptions;
+
+namespace Övning9_Garage3._0.Handlers;
+
+public class VehicleHandler
+{
+    public static VehicleType UserInputVehicleType()
+    {
+
+        //Determine vehicle type
+        while (true)
+        {    
+            string? userInput = PromptUser("VehicleType");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter a type!");
+                continue;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            int noOfVehicleTypes = Enum.GetValues<VehicleType>().Length-1;
+            if (parseSuccess)
+            {
+                if(userSelection < 1 || userSelection > noOfVehicleTypes)
+                {
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfVehicleTypes}!\n");
+                }
+                else
+                {
+                    return (VehicleType)(userSelection-1);
+                }
+            }
+            Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfVehicleTypes}!\n");
+        }   
+        
+    }
+
+    public static string UserInputLicensePlate()
+    {
+        string licensePlate = "";
+        //Determine licensePlate
+        while (true)
+        {
+            string? userInput = PromptUser("Licenseplate");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"You must enter something!");
+                continue;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            try{
+                licensePlate = FormatLicensePlate(userInput);
+                return licensePlate;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            
+        } 
+    }
+    private static string FormatLicensePlate(string input){
+        string reg = input ?? "error";
+        reg = Regex.Replace(reg, @"\s", "");
+                  
+        if(reg.Length != 6)
+        {
+            throw new Exception("LicensePlate must consist of 6 characters.");
+        }
+
+        if (!char.IsLetter(reg.ElementAt(0)) || !char.IsLetter(reg.ElementAt(1)) || !char.IsLetter(reg.ElementAt(2)))
+        {
+            throw new Exception("LicensePlate must have letters at positions 1 2, and 3.");
+        }
+
+        if (!char.IsDigit(reg.ElementAt(3)) || !char.IsDigit(reg.ElementAt(4)))
+        {
+            throw new Exception("LicensePlate must have integers at positions 3 and 4.");
+        }
+
+        return reg.ToUpper();
+    }
+
+    public static VehicleColour? UserInputColour()
+    {
+        //Determine colour
+        while (true)
+        {
+            string? userInput = PromptUser("Vehiclecolour");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No colour selected.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            int noOfColourTypes = Enum.GetValues<VehicleColour>().Length;
+            if (parseSuccess)
+            {
+                if(userSelection < 1 || userSelection > noOfColourTypes)
+                {
+                    if(userSelection == noOfColourTypes)
+                    {
+                        return null;
+                    }
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfColourTypes}!\n");
+                }
+                else
+                {
+                    return (VehicleColour)(userSelection-1);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfColourTypes}!\n");
+            }
+        }
+    }
+    public static FuelType? UserInputFuelType()
+    {
+
+        //Determine Fueltype
+        while (true)
+        {    
+            string? userInput = PromptUser("Fueltype");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No fueltype selected.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            int noOfFuelTypes = Enum.GetValues<FuelType>().Length;
+            if (parseSuccess)
+            {
+                if(userSelection < 1 || userSelection > noOfFuelTypes)
+                {
+                    if(userSelection == noOfFuelTypes)
+                    {
+                        return null;
+                    }
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfFuelTypes}!\n");
+                }
+                else
+                {
+                    return (FuelType)(userSelection-1);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfFuelTypes}!\n");
+            }
+        }
+    }
+
+    public static decimal? UserInputLength()
+    {
+        //Determine length
+        while (true)
+        {
+            string? userInput = PromptUser("Vehiclelength");
+            Console.WriteLine(userInput);
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No vehicle length specified.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+            
+            decimal length = 0;
+            Boolean parseSuccess = decimal.TryParse(userInput,out length);
+            if (parseSuccess)
+            {
+                //Hårdkodat, bör bytas senare till något kopplat till antal alternative
+                if(length < 1 || length > 100)
+                {
+                    Console.WriteLine($"Invalid option! Please provide the length of your vehicle!\n");
+                }
+                else
+                {
+                    return length;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an number!\n");
+            }
+        }
+    }
+
+
+
+
+    /*
+        Vehicle specific handlers
+        (Kanske bryta ut i egen fil?)
+    */
+
+
+    public static CarBodyType? UserInputCarBodyType()
+    {
+
+        while (true)
+        {    
+            string? userInput = PromptUser("carbody");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No body type selected.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            int noOfBodyTypes = Enum.GetValues<CarBodyType>().Length;
+            if (parseSuccess)
+            {
+                if(userSelection < 1 || userSelection > noOfBodyTypes)
+                {
+                    if(userSelection == noOfBodyTypes)
+                    {
+                        return null;
+                    }
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfBodyTypes}!\n");
+                }
+                else
+                {
+                    return (CarBodyType)(userSelection-1);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfBodyTypes}!\n");
+            }
+        }
+    }
+
+
+    public static MotorcycleBodyType? UserInputMotorcycleBodyType()
+    {
+        while (true)
+        {    
+            string? userInput = PromptUser("Motorcyclebody");
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No body type selected.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+
+            int userSelection = -1;
+            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            int noOfBodyTypes = Enum.GetValues<MotorcycleBodyType>().Length;
+            if (parseSuccess)
+            {
+                if(userSelection < 1 || userSelection > noOfBodyTypes)
+                {
+                    if(userSelection == noOfBodyTypes)
+                    {
+                        return null;
+                    }
+                    Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfBodyTypes}!\n");
+                }
+                else
+                {
+                    return (MotorcycleBodyType)(userSelection-1);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide an integer between 1 and {noOfBodyTypes}!\n");
+            }
+        }
+    }
+
+    public static int? UserInputNoOfSeats()
+    {
+        //Determine length
+        while (true)
+        {
+            string? userInput = PromptUser("noofseats");
+            Console.WriteLine(userInput);
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"No seat capacity specified.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+            
+            int noOfSeats = 0;
+            bool parseSuccess = int.TryParse(userInput,out noOfSeats);
+            if (parseSuccess)
+            {
+                //Hårdkodad range
+                if(noOfSeats < 1 || noOfSeats > 250)
+                {
+                    Console.WriteLine($"Invalid option! Please provide the number of seats of the vehicle!\n");
+                }
+                else
+                {
+                    return noOfSeats;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide a number!\n");
+            }
+        }
+    }
+
+
+    public static bool UserInputTrailerPresence()
+    {
+        //Determine length
+        while (true)
+        {
+            string? userInput = PromptUser("trailerpresence");
+            Console.WriteLine(userInput);
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"Invalid! Please write \'yes\' or \'no\'!");
+                continue;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+            
+            string str = userInput.ToLower();
+            if(str == "yes")
+            {
+                return true;
+            }
+            else if(str == "no")
+            {
+                return false;
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please write \'yes\' or \'no\'!\n");
+            }
+        }
+    }
+
+    public static int? UserInputNoOfEngines()
+    {
+        //Determine length
+        while (true)
+        {
+            string? userInput = PromptUser("noofengines");
+            Console.WriteLine(userInput);
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                Console.WriteLine($"Number of engines not specified.");
+                return null;
+            }
+            //Probably bad practice, fix later
+            if (userInput == "q")
+            {
+                throw new UserTerminationException("User quit successfully.");
+            }
+            if (userInput == "b")
+            {
+                throw new UserBackNavigationException();
+            }
+            
+            int noOfEngines = 0;
+            bool parseSuccess = int.TryParse(userInput,out noOfEngines);
+            if (parseSuccess)
+            {
+                //Hårdkodad range
+                if(noOfEngines < 1 || noOfEngines > 8)
+                {
+                    Console.WriteLine($"Invalid option! Please provide the number of engines of the vehicle!\n");
+                }
+                else
+                {
+                    return noOfEngines;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid option! Please provide a number!\n");
+            }
+        }
+    }
+
+    private static string? PromptUser(string property)
+    {
+        switch (property.ToUpper())
+        {
+            case "VEHICLETYPE":
+                Console.WriteLine("Please select the type of vehicle you wish to park by entering a number below corresponding to your vehicle type.");
+                int noOfVehicleTypes = Enum.GetValues<VehicleType>().Length-1;
+                for (int i = 0; i < noOfVehicleTypes; i++)
+                {
+                    Console.WriteLine(i+1 + ": " + (VehicleType)(i));
+                }
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "LICENSEPLATE":
+                Console.WriteLine("Please enter the licensePlate of the vehicle.");
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "VEHICLECOLOUR":
+                Console.WriteLine("Please select the colour of the vehicle (optional).");  
+                int noOfVehicleColours = Enum.GetValues<VehicleColour>().Length-1;      
+                for (int i = 0; i < noOfVehicleColours; i++)
+                {
+                    Console.WriteLine(i+1 + ": " + (VehicleColour)(i));
+                }
+                Console.WriteLine("6. Unspecified.");
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "FUELTYPE":
+                Console.WriteLine("Please select the fueltype of the vehicle (optional).");   
+                int noOfFuelTypes = Enum.GetValues<FuelType>().Length-1; 
+                for (int i = 0; i < noOfFuelTypes; i++)
+                {
+                    Console.WriteLine(i+1 + ": " + (FuelType)(i));
+                }
+                Console.WriteLine("6. Unspecified.");
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "VEHICLELENGTH":
+                Console.WriteLine("Please enter the length of the vehicle in meters (optional)."); 
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "CARBODY":
+                Console.WriteLine("Please select the body type of the car (optional).");   
+                int carNoOfBodyTypes = Enum.GetValues<CarBodyType>().Length-1; 
+                for (int i = 0; i < carNoOfBodyTypes; i++)
+                {
+                    Console.WriteLine(i+1 + ": " + (CarBodyType)(i));
+                }
+                Console.WriteLine(carNoOfBodyTypes+1 + ". Unspecified.");
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "MOTORCYCLEBODY":
+                Console.WriteLine("Please select the body type of the motorcycle (optional).");   
+                int motoNoOfBodyTypes = Enum.GetValues<MotorcycleBodyType>().Length-1; 
+                for (int i = 0; i < motoNoOfBodyTypes; i++)
+                {
+                    Console.WriteLine(i+1 + ": " + (MotorcycleBodyType)(i));
+                }
+                Console.WriteLine(motoNoOfBodyTypes+1 + ". Unspecified.");
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "NOOFSEATS":
+                Console.WriteLine("Please enter the number of seats of the vehicle (optional)."); 
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "TRAILERPRESENCE":
+                Console.WriteLine("Does the boat have a trailer? Please enter \'yes\' or \'no\'  (optional)."); 
+                Console.Write("> ");
+                return Console.ReadLine();
+            case "NOOFENGINES":
+                Console.WriteLine("Please enter the number of engines of the vehicle (optional)."); 
+                Console.Write("> ");
+                return Console.ReadLine();
+            default: 
+                Console.WriteLine("No such property.");
+                return null;
+        }
+        
+
+    }
+
+}
