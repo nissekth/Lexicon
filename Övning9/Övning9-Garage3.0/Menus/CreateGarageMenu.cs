@@ -1,11 +1,10 @@
 
 using Övning9_Garage3._0.Exceptions;
-using Övning9_Garage3._0.Models;
 using Övning9_Garage3._0.Handlers;
 
 namespace Övning9_Garage3._0.Menus;
 
-public class CreateGarageMenu
+public class CreateGarageMenu : IMenu
 {
 
     const string STAR_SEPARATOR = "*************************************";
@@ -14,7 +13,7 @@ public class CreateGarageMenu
     const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
     
 
-    public static Garage CreateNewGarage()
+    public static void StartMenu(GarageHandler gHandler)
     {
 
         Console.WriteLine("\n\n"+STAR_SEPARATOR);
@@ -34,10 +33,9 @@ public class CreateGarageMenu
             int garageCapacity = GarageHandler.UserInputGarageCapacity();
         
             Console.WriteLine(LINE_SEPARATOR); 
-            Garage garage = new Garage(garageName,garageCapacity);
+            gHandler.CreateGarage(garageName,garageCapacity);
 
             Console.WriteLine($"Success! Garage {garageName} was created!");
-            return garage;
             
         }
         catch (UserBackNavigationException) 

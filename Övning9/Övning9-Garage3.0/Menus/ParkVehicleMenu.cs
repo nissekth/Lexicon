@@ -4,32 +4,32 @@ using Övning9_Garage3._0.Handlers;
 
 namespace Övning9_Garage3._0.Menus;
 
-public class ParkVehicleMenu
+public class ParkVehicleMenu : IMenu
 {
 
     const string STAR_SEPARATOR = "********************************";
     const string MENU_TITLE = "*******  PARKING  MENU   *******";
     const string LINE_SEPARATOR = "_________________________________________";
     const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
-    public static void StartParkingMenu(Garage garage)
+    public static void StartMenu(GarageHandler gHandler)
     {
         Console.WriteLine("\n\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(STAR_SEPARATOR);
-        Console.WriteLine("Current garage is: " + garage.Name);
+        Console.WriteLine("Current garage is: " + gHandler.CurrentGarage().Name);
         Console.WriteLine(LINE_SEPARATOR);
         Console.WriteLine("Please enter some information about your vehicle by entering a number below corresponding to your wish.");
         Console.WriteLine(OPTION_QUIT);
 
         try
         {
-            Vehicle? vehicle = CreateVehicle(garage);
+            Vehicle? vehicle = CreateVehicle(gHandler.CurrentGarage());
             if(vehicle == null)
             {
                 Console.WriteLine("Vehicle not parked.");
                 return;
             }
-            ParkVehicle(garage, vehicle);
+            ParkVehicle(gHandler.CurrentGarage(), vehicle);
         }
         catch (UserTerminationException e)
         {
@@ -42,7 +42,7 @@ public class ParkVehicleMenu
 
     }
 
-    private static Vehicle? CreateVehicle(Garage garage)
+    private static Vehicle? CreateVehicle(Garage<Vehicle> garage)
     {
         try
         {        
@@ -52,7 +52,7 @@ public class ParkVehicleMenu
 
             Console.WriteLine(LINE_SEPARATOR);   
             string licensePlate = VehicleHandler.UserInputLicensePlate();
-            if (garage.LicensePlateAlreadyInGarage(licensePlate))
+            if (garage.VehicleInGarage(licensePlate))
             {
                 Console.WriteLine($"Vehicle with licensePlate {licensePlate} is already in the garage!");
                 return null;
@@ -109,7 +109,7 @@ public class ParkVehicleMenu
     }
 
 
-    private static void ParkVehicle(Garage garage, Vehicle vehicle){
+    private static void ParkVehicle(Garage<Vehicle> garage, Vehicle vehicle){
         try
         {
             garage.ParkVehicle(vehicle);

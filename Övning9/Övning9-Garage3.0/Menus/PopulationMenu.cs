@@ -4,21 +4,21 @@ using Övning9_Garage3._0.Handlers;
 
 namespace Övning9_Garage3._0.Menus;
 
-public class PopulationMenu
+public class PopulationMenu : IMenu
 {
     const string SEPARATOR = "***************************************";
     const string MENU_TITLE = "******* INITIAL POPULATION MENU *******";
     const string LINE_SEPARATOR = "_________________________________________";
     const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
-    public static void PopulateGarage(Garage garage)
+    public static void StartMenu(GarageHandler gHandler)
     {
         Console.WriteLine("\n\n"+SEPARATOR);
         Console.WriteLine(MENU_TITLE);
         Console.WriteLine(SEPARATOR);
         Console.WriteLine(LINE_SEPARATOR);
-        Console.WriteLine($"Current garage is: {garage.Name} - Capacity: {garage.MaxCapacity}");
+        Console.WriteLine($"Current garage is: {gHandler.CurrentGarage().Name} - Capacity: {gHandler.CurrentGarage().MaxCapacity}");
 
-        if (garage.AvailableSlots < garage.MaxCapacity)
+        if (gHandler.CurrentGarage().AvailableSlots < gHandler.CurrentGarage().MaxCapacity)
         {
             Console.WriteLine("Garage is not empty! Cannot populate non-empty garage.");
             return;
@@ -28,16 +28,16 @@ public class PopulationMenu
 
         try{
             Console.WriteLine("Please enter the number of vehicles you want created.");
-            int userSelection = SelectionHandler.UserInputSelection(1, garage.MaxCapacity);
+            int userSelection = SelectionHandler.UserInputSelection(1, gHandler.CurrentGarage().MaxCapacity);
 
             Random random = new();
-            int cap = Math.Min(userSelection, (int)garage.AvailableSlots);
+            int cap = Math.Min(userSelection, (int)gHandler.CurrentGarage().AvailableSlots);
             int vehiclesAdded = 0;
             while(cap > 0)
             {
-                int maxSize = Math.Min(Enum.GetNames<VehicleType>().Length-1, (int)garage.AvailableSlots);
-                garage.ParkVehicle(VehicleCreator.CreateVehicle(random, maxSize));
-                cap = Math.Min(userSelection-(++vehiclesAdded), (int)garage.AvailableSlots);
+                int maxSize = Math.Min(Enum.GetNames<VehicleType>().Length-1, (int)gHandler.CurrentGarage().AvailableSlots);
+                gHandler.CurrentGarage().ParkVehicle(VehicleCreator.CreateVehicle(random, maxSize));
+                cap = Math.Min(userSelection-(++vehiclesAdded), (int)gHandler.CurrentGarage().AvailableSlots);
             }
             if(vehiclesAdded < userSelection)
             {

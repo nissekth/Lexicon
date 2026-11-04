@@ -1,11 +1,10 @@
 
 using Övning9_Garage3._0.Exceptions;
-using Övning9_Garage3._0.Models;
 using Övning9_Garage3._0.Handlers;
 
 namespace Övning9_Garage3._0.Menus;
 
-public class SwitchGarageMenu
+public class SwitchGarageMenu : IMenu
 {
 
     const string STAR_SEPARATOR = "***************************************";
@@ -14,7 +13,7 @@ public class SwitchGarageMenu
     const string OPTION_QUIT = "Press \'q\' to quit or \'b\' to go back.\n";
 
 
-    public static int SwitchCurrentGarage(List<Garage> garages)
+    public static void StartMenu(GarageHandler gHandler)
     {
         Console.WriteLine("\n\n"+STAR_SEPARATOR);
         Console.WriteLine(MENU_TITLE);
@@ -24,9 +23,9 @@ public class SwitchGarageMenu
 
         try
         {
-            int index = GarageHandler.UserInputGarageIndex(garages);
-            Console.WriteLine($"Selecting {garages[index].Name} as current garage.");
-            return index;
+            //int userSelection = SelectionHandler.UserInputSelection(1, gHandler.GaragesCount());
+            gHandler.SwitchGarage();
+            Console.WriteLine($"Selected {gHandler.CurrentGarage().Name} as current garage.");
         }
         catch (UserTerminationException) 
         {

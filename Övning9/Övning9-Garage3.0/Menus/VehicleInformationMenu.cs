@@ -4,7 +4,7 @@ using Övning9_Garage3._0.Handlers;
 
 namespace Övning9_Garage3._0.Menus;
 
-public class VehicleInformationMenu
+public class VehicleInformationMenu : IMenu
 {
 
     const string STAR_SEPARATOR = "**************************************";
@@ -17,14 +17,14 @@ public class VehicleInformationMenu
     const string OPTION_QUIT = "Press \'q\' to quit and \'b\' to go back.\n";
     const int NUMBER_OF_OPTIONS = 4;
 
-    public static void StartInformationMenu(Garage garage)
+    public static void StartMenu(GarageHandler gHandler)
     {
 
         while(true){
             Console.WriteLine("\n\n"+STAR_SEPARATOR);
             Console.WriteLine(MENU_TITLE);
             Console.WriteLine(STAR_SEPARATOR);
-            Console.WriteLine("Current garage is: " + garage.Name);
+            Console.WriteLine("Current garage is: " + gHandler.CurrentGarage().Name);
             Console.WriteLine(LINE_SEPARATOR);
 
             Console.WriteLine("Please select what you wish to do by entering a number below corresponding to your wish.");
@@ -45,7 +45,7 @@ public class VehicleInformationMenu
 
                     try{
                         Console.WriteLine(LINE_SEPARATOR);
-                        Vehicle vehicle = garage.GetVehicleInformation(licensePlate);
+                        Vehicle vehicle = gHandler.CurrentGarage().GetVehicleInformation(licensePlate);
                         Console.WriteLine($"Success! The following vehicle was retrieved:");
                         Console.WriteLine(vehicle.ListVehicleAttributes());
                     }
@@ -59,7 +59,7 @@ public class VehicleInformationMenu
                 {
                     //Unneccessary to create this array, perhaps a bit encapsulation breaking?
                     //Ishould only request the information I actually need 
-                    List<Vehicle>? allParkedVehicles = garage.GetAllVehiclesInformation();
+                    IEnumerable<Vehicle>? allParkedVehicles = gHandler.CurrentGarage().GetAllVehiclesInformation();
                     Console.WriteLine(LINE_SEPARATOR);
                     if(allParkedVehicles == null)
                     {
@@ -77,33 +77,15 @@ public class VehicleInformationMenu
                 else if (userSelection == 3)
                 {
                     Console.WriteLine(LINE_SEPARATOR);
-                    PrintVehiclesFromCriteria(garage);
+                    PrintVehiclesFromCriteria(gHandler.CurrentGarage());
                 }
                 else if (userSelection == 4)
                 {
-                    List<int> garageStats = garage.GetGarageStats();
-                    bool empty = true;
-                    foreach (int vehicleStat in garageStats)
-                    {
-                        if (vehicleStat > 0)
-                        {
-                            empty = false;
-                            break;
-                        }
-                    }
-
+                    IReadOnlyDictionary<VehicleType,int> garageStats = gHandler.CurrentGarage().GetGarageStats();
                     Console.WriteLine(LINE_SEPARATOR);
-                    if(empty)
+                    foreach(var e in garageStats)
                     {
-                        Console.WriteLine("Garage is empty!");
-                    }
-                    else
-                    {
-                        int i = 0;
-                        foreach(int e in garageStats)
-                        {
-                            Console.WriteLine($"#{(VehicleType)i++}: {e}");
-                        }
+                        Console.WriteLine($"#{e.Key}: {e.Value}");
                     }
                 }
             }
@@ -119,7 +101,7 @@ public class VehicleInformationMenu
     }
 
 
-    public static void PrintVehiclesFromCriteria(Garage garage)
+    public static void PrintVehiclesFromCriteria(Garage<Vehicle> garage)
     {
         try{
             VehicleType? vehicleType = InformationSearchHandler.DetermineVehicleType();
@@ -128,7 +110,7 @@ public class VehicleInformationMenu
             int? noOfWheels = InformationSearchHandler.DetermineNoOfWheels();
             decimal? length = InformationSearchHandler.DetermineVehicleLength();
             
-            List<Vehicle> vehicles = garage.GetGarageSelection(vehicleType, colour, fuelType, noOfWheels, length);
+            IEnumerable<Vehicle> vehicles = garage.GetGarageSelection(vehicleType, colour, fuelType, noOfWheels, length);
 
             if(vehicles.Count() > 0){
 

@@ -10,14 +10,13 @@ public class Program
 {
     public static void Main()
     {
-        List<Garage> garages = [new ("Default Garage",20)];
-        int currentGarageIndex = 0;
+        GarageHandler garageHandler = new();
 
         Console.WriteLine("\nWelcome to Övning 9, Garage 3.0!");
         while(true){
 
             try{
-                MainMenu.StartMainMenu(garages, ref currentGarageIndex);
+                MainMenu.StartMenu(garageHandler);
             }
             catch(UserTerminationException e)
             {

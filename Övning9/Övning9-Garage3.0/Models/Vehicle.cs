@@ -2,7 +2,7 @@ using Övning9_Garage3._0.Exceptions;
 
 namespace Övning9_Garage3._0.Models;
 
-public abstract class Vehicle
+public abstract class Vehicle : IVehicle
 {
     public VehicleType VehicleType {get; private set;}
     private string _licensePlate = "";

@@ -89,7 +89,7 @@ public class VehicleCreator{
 
     private static string CreateRandomLicensePlate(Random random)
     {
-        const string alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ";
+        const string alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         string reg = "";
 
         //1st-3rd: letters

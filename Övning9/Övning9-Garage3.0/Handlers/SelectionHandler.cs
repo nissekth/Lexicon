@@ -34,7 +34,7 @@ public class SelectionHandler
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine($"You must select an option below or go back.");
+                Console.WriteLine($"You must select an option or go back.");
                 continue;
             }
             if (input == "q")

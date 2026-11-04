@@ -6,7 +6,31 @@ namespace Övning9_Garage3._0.Handlers;
 
 public class GarageHandler
 {
-    const int GARAGE_CAPACITY_CEILING = 200;
+    const int GARAGE_CAPACITY_CEILING = 800;
+
+    public List<Garage<Vehicle>> garages { get; private set; } = [new ("Default Garage",20)];
+    public int currentGarageIndex { get; private set; } = 0;
+
+    public void CreateGarage(string name, int capacity)
+    {
+        garages.Add(new Garage<Vehicle>(name,capacity));
+        currentGarageIndex = garages.Count - 1;
+    }
+
+    public Garage<Vehicle> CurrentGarage()
+    {
+        return garages.ElementAt(currentGarageIndex);
+    }
+
+    public int GaragesCount()
+    {
+        return garages.Count();
+    }
+
+    public IEnumerable<Garage<Vehicle>> GetGarages()
+    {
+        return garages;
+    }
 
     public static string UserInputGarageName()
     {
@@ -96,7 +120,7 @@ public class GarageHandler
     }
 
 
-    public static int UserInputGarageIndex(List<Garage> garages){
+    public void SwitchGarage(){
         //Determine garage index
         while (true)
         {  
@@ -116,18 +140,18 @@ public class GarageHandler
                 throw new UserBackNavigationException();
             }
 
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             if (parseSuccess)
             {
                 //Hårdkodat, bör bytas senare till något kopplat till antal alternative
-                if(userSelection < 1 || userSelection > garages.Count)
+                if(userSelection < 1 || userSelection > garages.Count())
                 {
                     Console.WriteLine($"Invalid option! Please provide an integer corresponding to the options!");
                 }
                 else
                 {
-                    return userSelection-1;
+                    currentGarageIndex = userSelection-1;
+                    return;
                 }
             }
             else
@@ -138,13 +162,13 @@ public class GarageHandler
     }
 
 
-    private static string? UserSelectGarage(List<Garage> garages)
+    private static string? UserSelectGarage(IEnumerable<Garage<Vehicle>> garages)
     {
 
         Console.WriteLine("Please enter which garage you would like to set as current.");
-        for(int i = 0; i < garages.Count; i++)
+        for(int i = 0; i < garages.Count(); i++)
         {
-            Console.WriteLine($"{i+1}. {garages[i].Name} - Available slots: {garages[i].AvailableSlots}");
+            Console.WriteLine($"{i+1}. {garages.ElementAt(i).Name} - Available slots: {garages.ElementAt(i).AvailableSlots}");
         }
 
         Console.Write("> ");

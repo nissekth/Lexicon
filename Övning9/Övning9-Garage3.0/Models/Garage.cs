@@ -1,18 +1,19 @@
 
+using System.Collections;
 using Övning9_Garage3._0.Exceptions;
 
 namespace Övning9_Garage3._0.Models;
 
 // Skulle kunna lägga till så att totalNoOfSlots kan vara en decimal, för motorcykelstorlekar och dyl
-public class Garage(string name, int capacity)
+public class Garage<T>(string name, int capacity) : IEnumerable<T> where T : Vehicle
 {
     public string Name {get; private set;} = name;
     public int MaxCapacity {get; private set;} = capacity;
     private decimal availableSlots = capacity;
     public decimal AvailableSlots => availableSlots;
-    private List<Vehicle> parkedVehicles = new List<Vehicle>();
+    private readonly List<T> parkedVehicles = new List<T>();
 
-    public void ParkVehicle(Vehicle vehicle){
+    public void ParkVehicle(T vehicle){
         if(vehicle.Size > availableSlots)
         {
             throw new GarageFullException();
@@ -22,14 +23,14 @@ public class Garage(string name, int capacity)
         availableSlots -= vehicle.Size;
     }
 
-    public Vehicle RetrieveVehicle(string licensePlate)
+    public T RetrieveVehicle(string licensePlate)
     {
         int index = FindVehicle(licensePlate.ToUpper());
         if(index == -1)
         {
             throw new NoSuchVehicleException();
         }
-        Vehicle vehicle = parkedVehicles[index];
+        T vehicle = parkedVehicles[index];
         parkedVehicles.RemoveAt(index);
         availableSlots += vehicle.Size;
         return vehicle;
@@ -40,7 +41,7 @@ public class Garage(string name, int capacity)
         int indexOfSpecifiedVehicle = -1;
         for(int i = 0; i < parkedVehicles.Count; i++)
         {
-            if(parkedVehicles[i].LicensePlate == licensePlate)
+            if(parkedVehicles[i].LicensePlate == licensePlate.ToUpper())
             {
                 return i;
             }
@@ -49,10 +50,10 @@ public class Garage(string name, int capacity)
         return indexOfSpecifiedVehicle;
     }
 
-    public Vehicle GetVehicleInformation(string licensePlate)
+    public T GetVehicleInformation(string licensePlate)
     {
 
-        int index = FindVehicle(licensePlate.ToUpper());
+        int index = FindVehicle(licensePlate);
         if(index == -1)
         {
             throw new NoSuchVehicleException();
@@ -60,66 +61,42 @@ public class Garage(string name, int capacity)
         return parkedVehicles[index];
     }
 
-    public List<Vehicle>? GetAllVehiclesInformation()
+    public IReadOnlyList<T>? GetAllVehiclesInformation()
     {
-        
-        if (parkedVehicles.Count < 1)
-        {
-            return null;
-        }
-        
-
-        List<Vehicle> allVehicles = new List<Vehicle>();
-
-        foreach(Vehicle v in parkedVehicles!)
-        {
-            allVehicles.Add(v);
-        }
-
-        return allVehicles;
+        return parkedVehicles;
     }
 
-    public bool LicensePlateAlreadyInGarage(string reg)
+    public bool VehicleInGarage(string licensePlate)
     {
-        if(FindVehicle(reg) == -1)
+        if(FindVehicle(licensePlate) == -1)
         {
             return false;
         }
         return true;
     }
 
-    public List<int> GetGarageStats()
+    public IReadOnlyDictionary<VehicleType,int> GetGarageStats()
     {
-        if (parkedVehicles.Count < 1)
+        Dictionary<VehicleType,int> stats = new();
+        foreach(VehicleType type in Enum.GetValues<VehicleType>())
         {
-            throw new Exception("Garage is empty!");
-        }
-
-        int capacity = Enum.GetValues<VehicleType>().Length;
-        List<int> stats = new List<int>(capacity);
-        for (int i = 0; i < capacity; i++)
-        {
-            stats.Add(0);
-        }
-        foreach(Vehicle v in parkedVehicles!)
-        {
-            stats[(int)v.VehicleType]++;
+            stats.Add(type, parkedVehicles.Count(v => v.VehicleType == type));
         }
         return stats;
     }
 
 
-    public List<Vehicle> GetGarageSelection(VehicleType? vehicleType, VehicleColour? colour, FuelType? fuelType, int? noOfWheels, decimal? length)
+    public IEnumerable<T> GetGarageSelection(VehicleType? vehicleType, VehicleColour? colour, FuelType? fuelType, int? noOfWheels, decimal? length)
     {
         if (!parkedVehicles.Any())
         {
             throw new Exception("Garage is empty!");
         }
         
-        List<Vehicle> selection = new List<Vehicle>();
+        List<T> selection = new List<T>();
 
         //Det här var ju inte så snyggt... Byt ut mot && eller || istället kanske
-        foreach (Vehicle? vehicle in parkedVehicles)
+        foreach (T? vehicle in parkedVehicles)
         {
             if (vehicleType == null || vehicle.VehicleType == vehicleType)
             {
@@ -129,7 +106,7 @@ public class Garage(string name, int capacity)
                     {
                         if (noOfWheels == null || vehicle.NoOfWheels == noOfWheels)
                         {
-                            if (length == null || vehicle.Length == length)
+                            if (length == null || vehicle.Length <= length)
                             {
                                 selection.Add(vehicle);
                             }
@@ -142,5 +119,16 @@ public class Garage(string name, int capacity)
         return selection;
     }
 
+    public IEnumerator<T> GetEnumerator()
+    {
+        foreach(T v in parkedVehicles)
+        {
+            yield return v;
+        }
+    }
 
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

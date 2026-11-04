@@ -27,9 +27,8 @@ public class VehicleHandler
             {
                 throw new UserBackNavigationException();
             }
-
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             int noOfVehicleTypes = Enum.GetValues<VehicleType>().Length-1;
             if (parseSuccess)
             {
@@ -123,8 +122,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
 
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             int noOfColourTypes = Enum.GetValues<VehicleColour>().Length;
             if (parseSuccess)
             {
@@ -169,8 +167,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
 
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             int noOfFuelTypes = Enum.GetValues<FuelType>().Length;
             if (parseSuccess)
             {
@@ -216,8 +213,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
             
-            decimal length = 0;
-            Boolean parseSuccess = decimal.TryParse(userInput,out length);
+            bool parseSuccess = decimal.TryParse(userInput,out decimal length);
             if (parseSuccess)
             {
                 //Hårdkodat, bör bytas senare till något kopplat till antal alternative
@@ -266,9 +262,8 @@ public class VehicleHandler
             {
                 throw new UserBackNavigationException();
             }
-
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             int noOfBodyTypes = Enum.GetValues<CarBodyType>().Length;
             if (parseSuccess)
             {
@@ -313,8 +308,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
 
-            int userSelection = -1;
-            Boolean parseSuccess = int.TryParse(userInput,out userSelection);
+            bool parseSuccess = int.TryParse(userInput,out int userSelection);
             int noOfBodyTypes = Enum.GetValues<MotorcycleBodyType>().Length;
             if (parseSuccess)
             {
@@ -360,8 +354,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
             
-            int noOfSeats = 0;
-            bool parseSuccess = int.TryParse(userInput,out noOfSeats);
+            bool parseSuccess = int.TryParse(userInput,out int noOfSeats);
             if (parseSuccess)
             {
                 //Hårdkodad range
@@ -442,8 +435,7 @@ public class VehicleHandler
                 throw new UserBackNavigationException();
             }
             
-            int noOfEngines = 0;
-            bool parseSuccess = int.TryParse(userInput,out noOfEngines);
+            bool parseSuccess = int.TryParse(userInput,out int noOfEngines);
             if (parseSuccess)
             {
                 //Hårdkodad range

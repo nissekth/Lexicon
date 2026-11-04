@@ -255,21 +255,7 @@ public class InformationSearchHandler
     public static string? GetUserSelection()
     {
         Console.Write("> ");
-        string? input = Console.ReadLine();
-
-        if(string.IsNullOrWhiteSpace(input))
-        {
-            return null;
-        }
-        if (input == "q")
-        {
-            throw new UserTerminationException();
-        }
-        if (input == "b")
-        {
-            throw new UserBackNavigationException();
-        }
-        return input;
+        return Console.ReadLine();
     }
    
 }
