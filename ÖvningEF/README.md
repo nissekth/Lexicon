@@ -1,6 +1,6 @@
 # Övning 1 - EF
 
-## 1. Vilka metoder har skapats  
+## 1. Vilka metoder har skapats i scaffoldingen 
 Scaffoldingen genererade våra CRUD-metoder:  
   
 GetProducts() - returnerar alla produkter.  
