@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StorageApi.Data;
+using StorageApi.DTOs;
 using StorageApi.Models;
 
 namespace StorageApi.Controllers
@@ -21,18 +22,49 @@ namespace StorageApi.Controllers
             _context = context;
         }
 
-        // GET: api/Products
+        // GET: api/Products 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts([FromQuery] string? category)
         {
-            return await _context.Products.ToListAsync();
+            List<ProductDto> products;
+            if(category == null)
+            {
+                products = await _context.Products
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Price = p.Price,
+                        Count = p.Count
+                    })
+                    .ToListAsync();
+            }
+            else
+            {
+                
+                // GET: api/Products/?category=KategoriNamn
+                products = await _context.Products
+                    .Where(p => p.Category == category)
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Price = p.Price,
+                        Count = p.Count
+                    })
+                    .ToListAsync();
+            }
+
+            return products;
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+
+            ProductDto? product = await _context.Products.Where(p => p.Id == id).Select(p => new ProductDto{
+                Id = p.Id, Name = p.Name, Price = p.Price, Count = p.Count}).SingleOrDefaultAsync();
 
             if (product == null)
             {
@@ -42,11 +74,30 @@ namespace StorageApi.Controllers
             return product;
         }
 
+        // GET: api/Products/stats
+        [HttpGet("stats")]
+        public async Task<ActionResult> GetStats()
+        {
+            int antalProdukter = await _context.Products.CountAsync();
+
+            int totaltLagervärde = await _context.Products
+                .SumAsync(p => p.Price * p.Count);
+
+            double snittpris = await _context.Products
+                .Select(p => p.Price)
+                .AverageAsync();
+
+            var stats = new{antalProdukter, totaltLagervärde, snittpris};
+
+            return Ok(stats);
+        }
+
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
+
             if (id != product.Id)
             {
                 return BadRequest();
@@ -76,12 +127,22 @@ namespace StorageApi.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto productDto)
         {
+            Product product = new Product
+            {
+                Name = productDto.Name,
+                Price = productDto.Price,
+                Category = productDto.Category,
+                Shelf = productDto.Shelf,
+                Count = productDto.Count,
+                Description = productDto.Description
+            };
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetProduct", new { id = product.Id }, productDto);
         }
 
         // DELETE: api/Products/5
